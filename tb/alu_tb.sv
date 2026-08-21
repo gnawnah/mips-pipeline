@@ -25,8 +25,9 @@ module alu_tb;
     endtask
 
     initial begin
-        // check add
-        check(5,7,4'b0010,12,0);
+        $dumpfile("alu.vcd");
+        $dumpvars(0, alu_tb);
+
         // check and
         check(1,1,4'b0000,1,0);
         // check or
@@ -35,6 +36,8 @@ module alu_tb;
         check(1,2,4'b0111,1,0);
         // check add for zero
         check(0,0,4'b0010,0,1);
+        // check add again, zero should drop back to 0
+        check(5,7,4'b0010,12,0);
 
         $finish;
 

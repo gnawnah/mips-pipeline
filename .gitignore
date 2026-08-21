@@ -22,3 +22,6 @@ xsim.dir/
 transcript
 ucli.key
 .Xil/
+
+* Icarus compiled output
+*_sim
