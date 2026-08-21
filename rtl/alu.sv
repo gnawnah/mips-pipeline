@@ -1,12 +1,12 @@
 module alu(
     input logic signed [31:0] a,
     input logic signed [31:0] b,
-    input logic [3:0] ctrl,
+    input logic [3:0] ctr,
     output logic [31:0] result,
     output logic zero = 0
 );  
     always_comb begin
-        case (ctrl)
+        case (ctr)
             4'b0000: result = a & b;
             4'b0001: result = a | b;
             4'b0010: result = a + b;
@@ -17,11 +17,5 @@ module alu(
         if(result==0) zero = 1;
         else zero = 0;
     end
-
-    
-
-
-
-
 
 endmodule
