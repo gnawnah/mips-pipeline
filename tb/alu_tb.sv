@@ -5,18 +5,19 @@ module alu_tb;
     logic [31:0] result;
     logic zero;
 
-    alu u0 (.(a), .b(b), .ctr(ctr), .result(result), .zero(zero));
+    alu u0 (.a(a), .b(b), .ctr(ctr), .result(result), .zero(zero));
 
     initial begin
-        #1;
-        a <= 5;
-        b <= 7;
-        ctr <= 4'b0010;
+        a = 5;
+        b = 7;
+        ctr = 4'b0010;
+
+        #1; // delay
 
         if(result==(a+b))
-            //display "true"
+            $display("true");
         else
-            //display "false"
+            $display("false");
 
         $finish;
 
