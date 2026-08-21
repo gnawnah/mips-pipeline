@@ -23,5 +23,5 @@ transcript
 ucli.key
 .Xil/
 
-* Icarus compiled output
+# Icarus compiled output
 *_sim
