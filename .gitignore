@@ -1,0 +1,24 @@
+# Simulation binaries and build output
+*.out
+*.vvp
+a.out
+obj_dir/
+simv*
+csrc/
+work/
+xsim.dir/
+
+# Waveform dumps
+*.vcd
+*.fst
+*.fsdb
+*.shm/
+*.wlf
+
+# Tool logs and misc
+*.log
+*.jou
+*.key
+transcript
+ucli.key
+.Xil/
