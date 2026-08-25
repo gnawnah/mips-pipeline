@@ -32,8 +32,9 @@ module regfile_tb;
         write_reg = write_reg_t;
         write_data = write_data_t;
 
-        @(posedge clk); #1
-        read_reg1 = write_reg_t;
+        @(posedge clk); 
+        read_reg1 = write_reg_t; 
+        #1; // this delay is important so read_data1 can actually be read after read_reg1 is assigned
 
         if(read_data1 == expected)
         $display("Pass!");
@@ -51,8 +52,6 @@ module regfile_tb;
     initial begin
         $dumpfile("regfile.vcd");
         $dumpvars(0, regfile_tb);
-
-        
 
         check(5,42,1,42);
 
