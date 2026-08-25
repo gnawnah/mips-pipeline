@@ -9,6 +9,20 @@ module regfile(
     output logic [31:0] read_data2
 );
 
+    logic [31:0] regs [0:31]; // registers
+
+    always_ff @(poesedge clk) begin
+        if(RegWrite) begin
+            regs[write_reg] <= write_data;
+        end
+
+
+    end
+
+    always_comb begin
+        read_data1 = regs[read_reg1];
+        read_data2 = regs[read_reg2];
+    end
 
 
 
