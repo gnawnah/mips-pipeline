@@ -25,11 +25,21 @@ module reg_file_tb;
         input RegWrite_t
     ); 
     begin
+        @(negedge clk);
+        // drive write inputs from task arguments
+        RegWrite = RegWrite_t;
         write_reg = write_reg_t;
         write_data = write_data_t;
 
-        if()
+        @(posedge clk); #1
+        read_reg1 = write_reg_t;
 
+        if((read_data1 == write_data)&&(RegWrite))
+        $display("RegWrite is high and the reg is good")
+        else if(!RegWrite)
+        $display("RegWrite is low, no point in checking");
+        else
+        $display("Failed!");
 
     end
     endtask
