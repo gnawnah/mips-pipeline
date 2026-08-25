@@ -14,7 +14,7 @@ module regfile(
     integer i;
     initial begin
         for (i=0; i<32; i=i+1) begin
-            regs[i] = 8'h0000;
+            regs[i] = 32'h00000000;
         end
     end
 

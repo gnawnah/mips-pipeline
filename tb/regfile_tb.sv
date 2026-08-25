@@ -1,4 +1,4 @@
-module reg_file_tb;
+module regfile_tb;
     logic [4:0] read_reg1;
     logic [4:0] read_reg2;
     logic [4:0] write_reg;
@@ -22,7 +22,8 @@ module reg_file_tb;
     task check(
         input [4:0] write_reg_t,
         input [31:0] write_data_t,
-        input RegWrite_t
+        input RegWrite_t,
+        input [31:0] expected
     ); 
     begin
         @(negedge clk);
@@ -34,10 +35,8 @@ module reg_file_tb;
         @(posedge clk); #1
         read_reg1 = write_reg_t;
 
-        if((read_data1 == write_data)&&(RegWrite))
-        $display("RegWrite is high and the reg is good")
-        else if(!RegWrite)
-        $display("RegWrite is low, no point in checking");
+        if(read_data1 == expected)
+        $display("Pass!");
         else
         $display("Failed!");
 
@@ -45,11 +44,23 @@ module reg_file_tb;
     endtask
 
     initial begin
+        clk = 0;
+        forever #5 clk = ~clk;
+    end
+
+    initial begin
         $dumpfile("regfile.vcd");
         $dumpvars(0, regfile_tb);
 
-        clk = 0;
-        forever #5 clk = ~clk;
+        
+
+        check(5,42,1,42);
+
+        check(0,99,1,0);
+
+        check(5,77,0,42);
+
+        $finish;
 
 
 
