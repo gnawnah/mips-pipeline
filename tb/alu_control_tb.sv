@@ -3,14 +3,16 @@ module alu_control_tb;
     logic [5:0] funct;
     logic [2:0] ALU_Control;
 
-    alu dut(
+    alu_control dut(
         .ALUOp(ALUOp), .funct(funct), .ALU_Control(ALU_Control)
     );
 
     task check(input [1:0] ALUOp_t, input [5:0] funct_t, input [2:0] ALU_Control_e);
     begin
-        ALUOP = ALUOp_t;
+        ALUOp = ALUOp_t;
         funct = funct_t;
+
+        #1;
 
         if(ALU_Control==ALU_Control_e)
         $display("PASS!");
@@ -33,9 +35,7 @@ module alu_control_tb;
         check(2'b10, 6'b101010, 3'b111);
         check(2'b11, 6'b010101, 3'bxxx);
 
-        $finish
-
-
+        $finish;
     end
 
 endmodule
