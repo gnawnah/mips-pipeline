@@ -14,7 +14,7 @@ module alu_control_tb;
 
         #1;
 
-        if(ALU_Control==ALU_Control_e)
+        if(ALU_Control===ALU_Control_e) // === is bit for bit
         $display("PASS!");
         else
         $display("FAIL! LOL!");
