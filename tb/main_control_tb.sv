@@ -1,13 +1,13 @@
 module main_control_tb;
-    input logic [5:0] opcode;
-    output logic RegDst;
-    output logic ALUSrc;
-    output logic MemtoReg;
-    output logic RegWrite;
-    output logic MemRead;
-    output logic MemWrite;
-    output logic Branch;
-    output logic [1:0] ALUOp;
+    logic [5:0] opcode;
+    logic RegDst;
+    logic ALUSrc;
+    logic MemtoReg;
+    logic RegWrite;
+    logic MemRead;
+    logic MemWrite;
+    logic Branch;
+    logic [1:0] ALUOp;
 
     logic [8:0] bus;
     assign bus = {RegDst,ALUSrc,MemtoReg,RegWrite,MemRead,MemWrite,Branch,ALUOp};
