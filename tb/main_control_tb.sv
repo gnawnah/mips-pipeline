@@ -46,6 +46,8 @@ module main_control_tb;
         check(6'b101011,9'b010001000);
         // check beq
         check(6'b000100,9'b000000101);
+        // check garbage
+        check(6'b111111,9'b000000000);
 
         $finish;
 
