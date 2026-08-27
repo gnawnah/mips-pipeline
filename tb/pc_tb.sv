@@ -6,7 +6,7 @@ module pc_tb;
 
     pc dut(.clk(clk),.reset(reset),.next_pc(next_pc),.pc(pc));
 
-    task check(input reset_t, input next_pc_t, input pc_e);
+    task check(input reset_t, input [31:0] next_pc_t, input [31:0] pc_e);
     begin
         @(negedge clk);
         reset = reset_t;
