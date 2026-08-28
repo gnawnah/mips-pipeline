@@ -11,7 +11,7 @@ module main_control(
 );
     always_comb begin
         case (opcode)
-            6'b000000:
+            6'b000000: // R-type
             begin
                 RegDst = 1'b1;
                 ALUSrc = 1'b0;
@@ -22,7 +22,7 @@ module main_control(
                 Branch = 1'b0;
                 ALUOp = 2'b10;
             end
-            6'b001000:
+            6'b001000: // addi
             begin
                 RegDst = 1'b0;
                 ALUSrc = 1'b1;
@@ -33,7 +33,7 @@ module main_control(
                 Branch = 1'b0;
                 ALUOp = 2'b00;
             end
-            6'b100011:
+            6'b100011: // lw
             begin
                 RegDst = 1'b0;
                 ALUSrc = 1'b1;
@@ -44,7 +44,7 @@ module main_control(
                 Branch = 1'b0;
                 ALUOp = 2'b00;
             end
-            6'b101011:
+            6'b101011: // sw
             begin
                 RegDst = 1'b0;
                 ALUSrc = 1'b1;
@@ -55,7 +55,7 @@ module main_control(
                 Branch = 1'b0;
                 ALUOp = 2'b00;
             end
-            6'b000100:
+            6'b000100: //beq
             begin
                 RegDst = 1'b0;
                 ALUSrc = 1'b0;
