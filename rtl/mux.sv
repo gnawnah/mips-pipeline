@@ -1,8 +1,8 @@
-module mux(
-    input logic [31:0] in0,
-    input logic [31:0] in1,
+module mux #(parameter WIDTH = 32)(
+    input logic [WIDTH-1:0] in0,
+    input logic [WIDTH-1:0] in1,
     input logic sel,
-    output logic [31:0] out
+    output logic [WIDTH-1:0] out
 ); 
     assign out = sel ? in1 : in0;
 
