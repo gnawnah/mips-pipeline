@@ -1,3 +1,7 @@
+## Related
+[approx-mult](https://github.com/gnawnah/approx-mult) — approximate multiplier
+
+# mips-pipeline
 This project is inspired by COMPSYS304: Computer Architecture.
 
 Commands:
