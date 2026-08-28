@@ -22,6 +22,17 @@ module main_control(
                 Branch = 1'b0;
                 ALUOp = 2'b10;
             end
+            6'b001000:
+            begin
+                RegDst = 1'b0;
+                ALUSrc = 1'b1;
+                MemtoReg = 1'b0;
+                RegWrite = 1'b1;
+                MemRead = 1'b0;
+                MemWrite = 1'b0;
+                Branch = 1'b0;
+                ALUOp = 2'b00;
+            end
             6'b100011:
             begin
                 RegDst = 1'b0;

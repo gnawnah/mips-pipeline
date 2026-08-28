@@ -8,7 +8,8 @@ module datapath(
     logic RegDst, ALUSrc, MemtoReg, RegWrite, MemRead, MemWrite, Branch;
     logic [1:0] ALUOp;
     logic [31:0] read_data1, read_data2;
-    
+    logic [31:0] se_out;
+    logic [2:0] ALU_Control;
     
     pc u_pc (.clk(clk),.reset(reset),.next_pc(pc_plus4),.pc(pc));
 
@@ -30,7 +31,7 @@ module datapath(
         .ALUOp(ALUOp)
     );
 
-    regfile u_reg_file(
+    regfile u_regfile(
         .read_reg1(instruction[25:21]),
         .read_reg2(instruction[20:16]),
         .write_reg(5'd0), // place holder
@@ -41,8 +42,16 @@ module datapath(
         .read_data2(read_data2)
     );
 
+    // I-type (lw, sw, addi, beq)
+    sign_extend u_sign_extend(
+        .in(instruction[15:0]),
+        .out(se_out)
+    );
 
-
-
+    alu_control u_alu_control(
+        .ALUOp(ALUOp),
+        .funct(instruction[5:0]),
+        .ALU_Control(ALU_Control)
+    );
 
 endmodule
