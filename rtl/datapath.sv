@@ -18,6 +18,7 @@ module datapath(
     logic [31:0] write_back_data;
     logic [4:0] write_reg;
     logic [31:0] branch_target;
+    logic PCSrc;
     
     pc u_pc (.clk(clk),.reset(reset),.next_pc(pc_plus4),.pc(pc));
 
@@ -105,7 +106,9 @@ module datapath(
     adder branch_target_adder(
         .a(pc_plus4),
         .b(se_out<<2),
-        .sum(branch_target);
+        .sum(branch_target)
     );
+
+    assign PCSrc = Branch & zero;
 
 endmodule
