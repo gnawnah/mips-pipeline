@@ -10,9 +10,12 @@ module datapath(
     logic [31:0] read_data1, read_data2;
     logic [31:0] se_out;
     logic [2:0] ALU_Control;
-    logic signed [31:0] b;
+    logic [31:0] b;
     logic [31:0] result;
     logic zero;
+    logic [31:0] mem_read_data;
+    logic [31:0] write_back_data;
+    logic [4:0] write_reg;
     
     pc u_pc (.clk(clk),.reset(reset),.next_pc(pc_plus4),.pc(pc));
 
@@ -37,8 +40,8 @@ module datapath(
     regfile u_regfile(
         .read_reg1(instruction[25:21]),
         .read_reg2(instruction[20:16]),
-        .write_reg(5'd0), // place holder
-        .write_data(32'd0), // place holder
+        .write_reg(write_reg), 
+        .write_data(write_back_data),
         .RegWrite(RegWrite),
         .clk(clk),
         .read_data1(read_data1),
@@ -72,5 +75,29 @@ module datapath(
         .zero(zero)
     );
 
+    dmem u_dmem(
+        .addr(result), // the alu result is the memory address
+        .write_data(read_data2), // for sw
+        .MemWrite(MemWrite), // from control
+        .MemRead(MemRead), // from control
+        .clk(clk),
+        .read_data(mem_read_data) // feads write bck
+    );
+
+    mux MemtoReg_mux(
+        // from alu or from memory data
+        .in0(result), // the alu result, for r-type addi
+        .in1(mem_read_data),
+        .sel(MemtoReg),
+        .out(write_back_data) // goes to regfile write_data
+    );
+
+    mux #(.WIDTH(5)) RegDst_mux (
+        // selects which register to write
+        .in0(instruction[20:16]), // rt (for I-type eg addi and lw)
+        .in1(instruction[15:11]), // rd (R-type)
+        .sel(RegDst),
+        .out(write_reg) // goes to regfile write_reg
+    );
 
 endmodule
