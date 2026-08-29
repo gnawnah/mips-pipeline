@@ -4,6 +4,7 @@ module datapath(
     output logic [31:0] pc, // for observing only, need to delete later
     output logic [31:0] instruction // same with this
 );
+
     logic [31:0] pc_plus4; //adder's output
     logic RegDst, ALUSrc, MemtoReg, RegWrite, MemRead, MemWrite, Branch;
     logic [1:0] ALUOp;
@@ -16,6 +17,7 @@ module datapath(
     logic [31:0] mem_read_data;
     logic [31:0] write_back_data;
     logic [4:0] write_reg;
+    logic [31:0] branch_target;
     
     pc u_pc (.clk(clk),.reset(reset),.next_pc(pc_plus4),.pc(pc));
 
@@ -98,6 +100,12 @@ module datapath(
         .in1(instruction[15:11]), // rd (R-type)
         .sel(RegDst),
         .out(write_reg) // goes to regfile write_reg
+    );
+
+    adder branch_target_adder(
+        .a(pc_plus4),
+        .b(se_out<<2),
+        .sum(branch_target);
     );
 
 endmodule
