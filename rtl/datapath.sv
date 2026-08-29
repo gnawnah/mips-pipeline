@@ -6,7 +6,7 @@ module datapath(
 );
 
     logic [31:0] pc_plus4; //adder's output
-    logic RegDst, ALUSrc, MemtoReg, RegWrite, MemRead, MemWrite, Branch;
+    logic RegDst, ALUSrc, MemtoReg, RegWrite, MemRead, MemWrite, Branch, Jump;
     logic [1:0] ALUOp;
     logic [31:0] read_data1, read_data2;
     logic [31:0] se_out;
@@ -18,12 +18,18 @@ module datapath(
     logic [31:0] write_back_data;
     logic [4:0] write_reg;
     logic [31:0] branch_target;
+    logic [31:0] branch_result;
     logic PCSrc;
     logic [31:0] next_pc;
+    logic [31:0] jump_target;
+
+    assign PCSrc = Branch & zero;
+
+    assign jump_target = {pc_plus4[31:28], instruction[25:0], 2'b00}; // top bits of pc+4, 26 bit address field, 2 zero bits
     
     pc u_pc (.clk(clk),.reset(reset),.next_pc(next_pc),.pc(pc));
 
-    adder u_adder (.a(pc),.b(32'd4),.sum(pc_plus4));
+    adder plus4_adder (.a(pc),.b(32'd4),.sum(pc_plus4));
 
     imem u_imem (.addr(pc),.instruction(instruction));
 
@@ -38,6 +44,7 @@ module datapath(
         .MemRead(MemRead),
         .MemWrite(MemWrite),
         .Branch(Branch),
+        .Jump(Jump),
         .ALUOp(ALUOp)
     );
 
@@ -110,12 +117,17 @@ module datapath(
         .sum(branch_target)
     );
 
-    assign PCSrc = Branch & zero;
-
     mux #(.WIDTH(32)) PCSrc_mux (
         .in0(pc_plus4),
         .in1(branch_target),
         .sel(PCSrc),
+        .out(branch_result)
+    );
+
+    mux #(.WIDTH(32)) Jump_mux(
+        .in0(branch_result),
+        .in1(jump_target),
+        .sel(Jump),
         .out(next_pc)
     );
 
