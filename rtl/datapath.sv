@@ -19,8 +19,9 @@ module datapath(
     logic [4:0] write_reg;
     logic [31:0] branch_target;
     logic PCSrc;
+    logic [31:0] next_pc;
     
-    pc u_pc (.clk(clk),.reset(reset),.next_pc(pc_plus4),.pc(pc));
+    pc u_pc (.clk(clk),.reset(reset),.next_pc(next_pc),.pc(pc));
 
     adder u_adder (.a(pc),.b(32'd4),.sum(pc_plus4));
 
@@ -110,5 +111,12 @@ module datapath(
     );
 
     assign PCSrc = Branch & zero;
+
+    mux #(.WIDTH(32)) PCSrc_mux (
+        .in0(pc_plus4),
+        .in1(branch_target),
+        .sel(PCSrc),
+        .out(next_pc)
+    );
 
 endmodule
