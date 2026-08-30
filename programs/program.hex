@@ -8,5 +8,8 @@
 ac0a0000   // sw   $10,0($0)    # mem[0]=8
 8c0f0000   // lw   $15,0($0)    # $15=8
 11080001   // beq  $8,$8,+1     # taken -> skip next
-20100063   // addi $16,$0,99    # SKIPPED
+20100063   // addi $16,$0,99    # SKIPPED by beq
 20100007   // addi $16,$0,7     # $16=7
+0800000e   // j 14             # skip poison -> land index 14
+20110091   // addi $17,$0,91    # POISON - skipped by j
+20110004   // addi $17,$0,4     # $17=4
