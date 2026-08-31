@@ -1,10 +1,9 @@
 module datapath(
     input logic clk, 
-    input logic reset,
-    output logic [31:0] pc, // for observing only, need to delete later
-    output logic [31:0] instruction // same with this
+    input logic reset
 );
-
+    logic [31:0] pc;
+    logic [31:0] instruction;
     logic [31:0] pc_plus4; //adder's output
     logic RegDst, ALUSrc, MemtoReg, RegWrite, MemRead, MemWrite, Branch, Jump;
     logic [1:0] ALUOp;
