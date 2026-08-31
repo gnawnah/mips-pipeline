@@ -37,7 +37,7 @@ module datapath_tb;
             end
             else begin
                 fails++;
-                $display("FAIL, %s: got %0d exp %0d", name, cpu.u_dmem.regs[index], expected);
+                $display("FAIL, %s: got %0d exp %0d", name, cpu.u_dmem.mem[index], expected);
             end
         end
     endtask
@@ -67,6 +67,8 @@ module datapath_tb;
         check_reg(17, 4, "j skipped");
 
         check_mem(0, 8, "mem [0] sw");
+
+        $display("%0d passes, %0d fails", passes, fails);
 
         $finish;
 
