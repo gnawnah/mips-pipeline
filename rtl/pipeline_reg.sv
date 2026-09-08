@@ -7,7 +7,7 @@ module pipeline_reg #(parameter WIDTH = 32)(
 );
 
     always_ff @(posedge clk ) begin
-        if(flush) out<=0;
+        if(flush) out<=32'h0000_0000;
         else if (stall) out<=out;
         else out<=in;
     end
