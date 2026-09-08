@@ -26,6 +26,17 @@ module datapath(
     logic [31:0] id_instruction;
     logic [31:0] id_pc_plus4;
 
+    typedef struct packed{
+        logic [31:0] read_data1;
+        logic [31:0] read_data2;
+        logic [31:0] se_out;
+        logic [31:0] id_pc_plus4;
+        logic [4:0] rt;
+        logic [4:0] rd;
+        logic RegDst, ALUSrc, Branch, Jump, MemRead, MemWrite, MemtoReg, RegWrite;
+        logic [1:0] ALUOp;
+    } idex_t;
+
     assign PCSrc = Branch & zero;
 
     assign jump_target = {id_pc_plus4[31:28], id_instruction[25:0], 2'b00}; // top bits of pc+4, 26 bit address field, 2 zero bits
@@ -144,6 +155,7 @@ module datapath(
         .in({instruction, pc_plus4}),
         .out(ifid_out)
     );
+
 
 
 endmodule
