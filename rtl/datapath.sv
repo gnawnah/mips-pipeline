@@ -2,6 +2,18 @@ module datapath(
     input logic clk, 
     input logic reset
 );
+
+    typedef struct packed{
+        logic [31:0] read_data1;
+        logic [31:0] read_data2;
+        logic [31:0] se_out;
+        logic [31:0] id_pc_plus4;
+        logic [4:0] rt;
+        logic [4:0] rd;
+        logic RegDst, ALUSrc, Branch, Jump, MemRead, MemWrite, MemtoReg, RegWrite;
+        logic [1:0] ALUOp;
+    } idex_t;
+
     logic [31:0] pc;
     logic [31:0] instruction;
     logic [31:0] pc_plus4; //adder's output
@@ -26,16 +38,7 @@ module datapath(
     logic [31:0] id_instruction;
     logic [31:0] id_pc_plus4;
 
-    typedef struct packed{
-        logic [31:0] read_data1;
-        logic [31:0] read_data2;
-        logic [31:0] se_out;
-        logic [31:0] id_pc_plus4;
-        logic [4:0] rt;
-        logic [4:0] rd;
-        logic RegDst, ALUSrc, Branch, Jump, MemRead, MemWrite, MemtoReg, RegWrite;
-        logic [1:0] ALUOp;
-    } idex_t;
+    idex_t idex_in, idex_out;
 
     assign PCSrc = Branch & zero;
 
@@ -43,6 +46,24 @@ module datapath(
     
     assign id_instruction = ifid_out[63:32];
     assign id_pc_plus4 = ifid_out[31:0];
+
+    always_comb begin
+        idex_in.read_data1 = read_data1;
+        idex_in.read_data2 = read_data2;
+        idex_in.se_out = se_out;
+        idex_in.id_pc_plus4 = id_pc_plus4;
+        idex_in.rt = id_instruction[20:16];
+        idex_in.rd = id_instruction[15:11];
+        idex_in.RegDst = RegDst;
+        idex_in.ALUSrc = ALUSrc;
+        idex_in.Branch = Branch;
+        idex_in.Jump = Jump;
+        idex_in.MemRead = MemRead;
+        idex_in.MemWrite = MemWrite;
+        idex_in.MemtoReg = MemtoReg;
+        idex_in.RegWrite = RegWrite;
+        idex_in.ALUOp = ALUOp;
+    end
 
     pc u_pc (.clk(clk),.reset(reset),.next_pc(next_pc),.pc(pc));
 
@@ -156,6 +177,12 @@ module datapath(
         .out(ifid_out)
     );
 
-
+    pipeline_reg #(.WIDTH($bits(idex_t))) idex(
+        .clk(clk),
+        .stall(1'b0),
+        .flush(1'b0),
+        .in(idex_in),
+        .out(idex_out)
+    );
 
 endmodule
