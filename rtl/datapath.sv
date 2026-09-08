@@ -22,10 +22,17 @@ module datapath(
     logic [31:0] next_pc;
     logic [31:0] jump_target;
 
+    logic [63:0] ifid_out;
+    logic [31:0] id_instruction;
+    logic [31:0] id_pc_plus4;
+
     assign PCSrc = Branch & zero;
 
-    assign jump_target = {pc_plus4[31:28], instruction[25:0], 2'b00}; // top bits of pc+4, 26 bit address field, 2 zero bits
+    assign jump_target = {id_pc_plus4[31:28], id_instruction[25:0], 2'b00}; // top bits of pc+4, 26 bit address field, 2 zero bits
     
+    assign id_instruction = ifid_out[63:32];
+    assign id_pc_plus4 = ifid_out[31:0];
+
     pc u_pc (.clk(clk),.reset(reset),.next_pc(next_pc),.pc(pc));
 
     adder plus4_adder (.a(pc),.b(32'd4),.sum(pc_plus4));
@@ -35,7 +42,7 @@ module datapath(
     // instruction: opcode bits [31:26], rs bits [25:21], rt bits[20:16], 
     // rd bits[15:11] (R-Type), funct bits [5:0] (R-type), immediate bits [15:0] (I-type)
     main_control u_main_control (
-        .opcode(instruction[31:26]),
+        .opcode(id_instruction[31:26]),
         .RegDst(RegDst),
         .ALUSrc(ALUSrc),
         .MemtoReg(MemtoReg),
@@ -48,8 +55,8 @@ module datapath(
     );
 
     regfile u_regfile(
-        .read_reg1(instruction[25:21]),
-        .read_reg2(instruction[20:16]),
+        .read_reg1(id_instruction[25:21]),
+        .read_reg2(id_instruction[20:16]),
         .write_reg(write_reg), 
         .write_data(write_back_data),
         .RegWrite(RegWrite),
@@ -60,13 +67,13 @@ module datapath(
 
     // I-type (lw, sw, addi, beq)
     sign_extend u_sign_extend(
-        .in(instruction[15:0]),
+        .in(id_instruction[15:0]),
         .out(se_out)
     );
 
     alu_control u_alu_control(
         .ALUOp(ALUOp),
-        .funct(instruction[5:0]),
+        .funct(id_instruction[5:0]),
         .ALU_Control(ALU_Control)
     );
 
@@ -104,14 +111,14 @@ module datapath(
 
     mux #(.WIDTH(5)) RegDst_mux (
         // selects which register to write
-        .in0(instruction[20:16]), // rt (for I-type eg addi and lw)
-        .in1(instruction[15:11]), // rd (R-type)
+        .in0(id_instruction[20:16]), // rt (for I-type eg addi and lw)
+        .in1(id_instruction[15:11]), // rd (R-type)
         .sel(RegDst),
         .out(write_reg) // goes to regfile write_reg
     );
 
     adder branch_target_adder(
-        .a(pc_plus4),
+        .a(id_pc_plus4),
         .b(se_out<<2),
         .sum(branch_target)
     );
@@ -129,5 +136,14 @@ module datapath(
         .sel(Jump),
         .out(next_pc)
     );
+
+    pipeline_reg #(.WIDTH(64)) ifid(
+        .clk(clk),
+        .stall(1'b0),
+        .flush(1'b0),
+        .in({instruction, pc_plus4}),
+        .out(ifid_out)
+    );
+
 
 endmodule

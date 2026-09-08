@@ -1,11 +1,12 @@
-module pipeline_reg_tb #(parameter WIDTH = 32);
+module pipeline_reg_tb;
+    localparam WIDTH=32;
     logic clk;
     logic stall;
     logic flush;
     logic [WIDTH-1:0] in;
     logic [WIDTH-1:0] out;
-
-    pipeline_reg #(.WIDTH(32)) dut(
+    
+    pipeline_reg #(.WIDTH(WIDTH)) dut(
         .clk(clk), .stall(stall), .flush(flush), .in(in), .out(out)
     );
 
@@ -18,7 +19,7 @@ module pipeline_reg_tb #(parameter WIDTH = 32);
 
         @(posedge clk);
         #1;
-        if(out==exp) $display("PASS");
+        if(out===exp) $display("PASS");
         else $display("FAIL, expected: %h, got: %h", exp, out);
     end
     endtask
